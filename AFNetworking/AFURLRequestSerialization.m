@@ -469,6 +469,10 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 - (id)initWithStringEncoding:(NSStringEncoding)encoding;
 - (void)setInitialAndFinalBoundaries;
 - (void)appendHTTPBodyPart:(AFHTTPBodyPart *)bodyPart;
+
+#warning MUZZ HACK FOR CONTENT LENGTH ERROR
+- (NSData*) dataByReadingAll;
+
 @end
 
 #pragma mark -
@@ -635,7 +639,10 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 
     // Reset the initial and final boundaries to ensure correct Content-Length
     [self.bodyStream setInitialAndFinalBoundaries];
-    [self.request setHTTPBodyStream:self.bodyStream];
+    
+#warning MUZZ HACK FOR CONTENT LENGTH ERROR
+    //[self.request setHTTPBodyStream:self.bodyStream];
+    [self.request setHTTPBody:[self.bodyStream dataByReadingAll]];
 
     [self.request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", kAFMultipartFormBoundary] forHTTPHeaderField:@"Content-Type"];
     [self.request setValue:[NSString stringWithFormat:@"%llu", [self.bodyStream contentLength]] forHTTPHeaderField:@"Content-Length"];
@@ -691,6 +698,23 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 
 - (BOOL)isEmpty {
     return [self.HTTPBodyParts count] == 0;
+}
+
+#warning MUZZ HACK FOR CONTENT LENGTH ERROR
+
+- (NSData *)dataByReadingAll
+{
+    uint8_t* buffer = malloc((unsigned long)self.contentLength);
+    
+    [self open];
+    NSInteger bytesRead = [self read:buffer maxLength:(NSUInteger)self.contentLength];
+    [self close];
+    
+    NSData* data = [NSData dataWithBytes:buffer length:bytesRead];
+    
+    free(buffer);
+    
+    return data;
 }
 
 #pragma mark - NSInputStream
