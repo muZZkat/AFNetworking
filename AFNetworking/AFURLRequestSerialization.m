@@ -264,14 +264,14 @@ NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
 
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method
                                  URLString:(NSString *)URLString
-                                parameters:(NSDictionary *)parameters
+                                parameters:(id)parameters
 {
     return [self requestWithMethod:method URLString:URLString parameters:parameters error:nil];
 }
 
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method
                                  URLString:(NSString *)URLString
-                                parameters:(NSDictionary *)parameters
+                                parameters:(id)parameters
                                      error:(NSError *__autoreleasing *)error
 {
     NSParameterAssert(method);
@@ -342,8 +342,7 @@ NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
 
 - (NSMutableURLRequest *)requestWithMultipartFormRequest:(NSURLRequest *)request
                              writingStreamContentsToFile:(NSURL *)fileURL
-                                       completionHandler:(void (^)(NSError *error))handler;
-
+                                       completionHandler:(void (^)(NSError *error))handler
 {
     if (!request.HTTPBodyStream) {
         return [request mutableCopy];
@@ -1118,6 +1117,7 @@ typedef enum {
     bodyPart.headers = self.headers;
     bodyPart.bodyContentLength = self.bodyContentLength;
     bodyPart.body = self.body;
+    bodyPart.boundary = self.boundary;
     
     return bodyPart;
 }
