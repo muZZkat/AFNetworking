@@ -538,7 +538,7 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 - (void)setInitialAndFinalBoundaries;
 - (void)appendHTTPBodyPart:(AFHTTPBodyPart *)bodyPart;
 
-#warning MUZZ HACK FOR CONTENT LENGTH ERROR
+//TODO MUZZ HACK FOR CONTENT LENGTH ERROR
 - (NSData*) dataByReadingAll;
 
 @end
@@ -712,7 +712,7 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
     // Reset the initial and final boundaries to ensure correct Content-Length
     [self.bodyStream setInitialAndFinalBoundaries];
     
-#warning MUZZ HACK FOR CONTENT LENGTH ERROR
+    //TODO MUZZ HACK FOR CONTENT LENGTH ERROR
     //[self.request setHTTPBodyStream:self.bodyStream];
     [self.request setHTTPBody:[self.bodyStream dataByReadingAll]];
 
@@ -772,7 +772,7 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
     return [self.HTTPBodyParts count] == 0;
 }
 
-#warning MUZZ HACK FOR CONTENT LENGTH ERROR
+//TODO MUZZ HACK FOR CONTENT LENGTH ERROR
 
 - (NSData *)dataByReadingAll
 {
